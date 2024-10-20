@@ -8,7 +8,7 @@ class Post(BaseModel):
     id : int 
     body: str | None = None
     image: str | None = None
-    post_date : date | None = None
+    post_date : date = date.today()
     user_id : int 
 
 
