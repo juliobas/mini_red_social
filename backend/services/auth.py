@@ -1,5 +1,6 @@
 from schemas.user_schema import User
 from models.user import User as UserModel
+import bcrypt
 
 class AuthService:
     def register_user(self, user: User):
