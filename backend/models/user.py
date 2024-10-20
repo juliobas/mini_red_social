@@ -18,7 +18,9 @@ class User:
         cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
         row = cursor.fetchone()
         self.db.close()
-        return row_to_dict(row)
+        if row:
+            return row_to_dict(row)
+        return None
     
     def register_user(self, user):
         cursor = self.db.cursor()
@@ -29,4 +31,11 @@ class User:
         self.db.commit()
         self.db.close()
         return {"data": user.email}  
+    
+    def login_user(self, user):
+        email = user.email 
+        password = self.get_by_email(email)['password']
+        return password
+
+    
     
