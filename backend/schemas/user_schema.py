@@ -12,6 +12,11 @@ class User(BaseModel):
     password: str
     avatar: str | None = None
 
+
+class UserLogin(BaseModel):
+    email : str
+    password : str
+
     
 
 
