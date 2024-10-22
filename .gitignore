@@ -330,6 +330,8 @@ sketch
 
 
 ###DB### 
-db.sqlite 
+db.sqlite
+db.db
+db.db-journal 
 
 # End of https://www.toptal.com/developers/gitignore/api/python,node,react,remix
