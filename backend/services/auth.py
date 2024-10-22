@@ -17,7 +17,7 @@ class AuthService:
         existing_user = UserModel().get_by_email(user.email)
 
         if not existing_user:
-            raise ValueError("Email or password incorrect")
+            raise ValueError("Email Incorrect")
         
         password = user.password.encode('utf-8')
         password_hash = existing_user['password'] 
@@ -25,7 +25,7 @@ class AuthService:
         if bcrypt.checkpw(password, password_hash.encode('utf-8')):
             return True
         else:
-            raise ValueError("Email or password incorrect")
+            raise ValueError("password incorrect")
         
         
 

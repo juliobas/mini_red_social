@@ -36,6 +36,15 @@ class User:
         email = user.email 
         password = self.get_by_email(email)['password']
         return password
+    
+    def get_name(self, email):
+        cursor = self.db.cursor()
+        cursor.execute('SELECT name FROM users WHERE email = ?', (email))
+        row = cursor.fetchone()
+        self.db.close()
+        if row:
+            return row_to_dict(row)
+        return True
 
     
     
