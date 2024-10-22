@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 from schemas.user_schema import User, UserLogin
 from services.auth import AuthService
 
@@ -16,10 +17,9 @@ def register(user: User):
     
 
 @auth_router.post("/login")
-def login(user:UserLogin):
+def login(user: UserLogin):
     try:
-        AuthService().login_user(user)
-
-        return JSONResponse(status_code=200, content={"success": True, "Token": "Token" , "message" : "login sucessfull"})
-    except ValueError:
-        return JSONResponse(status_code=400, content={"sucess": False , "message": "Email or password" })
+        token = AuthService().login_user(user)
+        return JSONResponse(status_code=200, content={"success": True, "data": jsonable_encoder(token) , "message" : "login sucessfull"})
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"sucess": False , "message": str(e)})

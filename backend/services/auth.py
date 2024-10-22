@@ -1,6 +1,7 @@
 from schemas.user_schema import User, UserLogin
 from models.user import User as UserModel
 import bcrypt
+from utils.jwt_manager import create_token
 
 class AuthService:
     def register_user(self, user: User):
@@ -23,7 +24,8 @@ class AuthService:
         password_hash = existing_user['password'] 
 
         if bcrypt.checkpw(password, password_hash.encode('utf-8')):
-            return True
+            token = create_token({"id": existing_user["id"], "name": existing_user["name"], "email": existing_user['email']})
+            return token
         else:
             raise ValueError("password incorrect")
         
