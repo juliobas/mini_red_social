@@ -7,7 +7,7 @@ class User:
 
     def list_users(self):
         cursor = self.db.cursor()
-        cursor.execute('SELECT * FROM users')
+        cursor.execute('SELECT id, name, email, avatar FROM users')
         rows = cursor.fetchall()
         self.db.close()
         users = [row_to_dict(row) for row in rows]
@@ -15,7 +15,16 @@ class User:
 
     def get_by_email(self, email):
         cursor = self.db.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
+        cursor.execute('SELECT id, name, email, avatar, password FROM users WHERE email = ?', (email,))
+        row = cursor.fetchone()
+        self.db.close()
+        if row:
+            return row_to_dict(row)
+        return None
+    
+    def get_by_id(self, id):
+        cursor = self.db.cursor()
+        cursor.execute('SELECT id, name, email, avatar FROM users WHERE id = ?', (id,))
         row = cursor.fetchone()
         self.db.close()
         if row:
@@ -31,6 +40,13 @@ class User:
         self.db.commit()
         self.db.close()
         return {"data": user.email}  
+    
+    def delete_user(self, id):
+        cursor = self.db.cursor()
+        cursor.execute('DELETE FROM users WHERE id = ?', (id,))
+        self.db.commit()
+        self.db.close()
+        return {"data": id}
     
     def login_user(self, user):
         email = user.email 
