@@ -61,8 +61,3 @@ class User:
         if row:
             return row_to_dict(row)
         return True
-    
-    
-
-    
-    

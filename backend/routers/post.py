@@ -6,8 +6,6 @@ from fastapi.responses import JSONResponse
 from fastapi import status, HTTPException
 from fastapi.encoders import jsonable_encoder
 
-
-
 post_router = APIRouter()
 
 @post_router.post("/createPost", tags=["post"],status_code=200,response_model=Post ,dependencies=[Depends(JWTBearer())])
