@@ -19,5 +19,8 @@ class UserLogin(BaseModel):
 
     
 
-
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    password: Optional[str] = None
+    avatar: Optional[str] = None
 
