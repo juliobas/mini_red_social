@@ -8,8 +8,6 @@ class Post_manager:
     def __init__(self) -> None:
         self.db = get_db_connection()
 
-
-
     def create_post(self, post: Post):
         cursor = self.db.cursor()
         cursor.execute('INSERT INTO posts (body, image_url, post_date, user_id) VALUES (?,?,?,?)', 
