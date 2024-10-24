@@ -2,8 +2,11 @@ import { Form } from "@remix-run/react";
 import Button from "~/components/Button";
 import { ButtonState } from "~/utilities/enums";
 import { RiCameraLensLine } from "react-icons/ri";
+import { useState } from "react";
 
 export default function Login () {
+    const [email, setEmail] = useState('');
+    const [pass, setPass] = useState('');
     return (
         <div className="min-h-dvh center-full">
             <main className="min-h-dvh center-full w-90-auto max-w-[400px] md:border-[1px] md:border-gray-low md:px-[40px] md:max-w-[480px] md:rounded-2xl md:min-h-[700px]">
@@ -22,7 +25,9 @@ export default function Login () {
                             className="text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full"
                             aria-label="Correo electrónico"
                             name="email"
-                            type="text" 
+                            type="email"
+                            value={email}
+                            onChange={v => setEmail(v.target.value)} 
                         />
                     </label>
 
@@ -32,12 +37,14 @@ export default function Login () {
                             className="text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full"
                             aria-label="contraseña"
                             name="pass"
-                            type="text" 
+                            type="password" 
+                            value={pass}
+                            onChange={v => setPass(v.target.value)}
                         />
                     </label>
 
                     <Button
-                        state={ButtonState.Active}
+                        state={ email.length > 0 && pass.length > 5 ? ButtonState.Active : ButtonState.Inactive}
                     >
                         Iniciar sesion
                     </Button>
