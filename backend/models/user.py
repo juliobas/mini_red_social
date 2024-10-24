@@ -62,6 +62,23 @@ class User:
             return row_to_dict(row)
         return True
     
+    def update_user(self, user, id):
+        cursor = self.db.cursor()
+        cursor.execute('UPDATE users SET name= ? , avatar=?, password=?  WHERE id = ?', (user.name, user.avatar, user.password, user.id)) 
+        self.db.commit()
+        self.db.close()
+
+        return True
+    
+    def get_user_with_pw_by_id(self, id):
+        cursor = self.db.cursor()
+        cursor.execute('SELECT id, name, email, avatar, password FROM users WHERE id = ?', (id,))
+        row = cursor.fetchone()
+        self.db.close()
+        if row:
+            return row_to_dict(row)
+        return None
+    
     
 
     
