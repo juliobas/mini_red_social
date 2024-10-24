@@ -29,7 +29,6 @@ class UserService:
 
 
         if UserModel().update_user(user=userBD, id=id) : 
-            print("actualizando base de datos")
             return userBD
         else:
             return False
