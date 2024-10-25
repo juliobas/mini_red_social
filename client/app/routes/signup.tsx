@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import Button from "~/components/Button";
 import { ButtonState } from "~/utilities/enums";
 import { RiCameraLensLine } from "react-icons/ri";
@@ -75,7 +75,7 @@ export default function Signup() {
                         Registrarse
                     </Button>
                 </Form>
-                <p>¿Ya tienes cuenta? <a href="" className="font-medium transition-colors text-sky-base hover:text-sky-hover active:text-sky-active">Inicia sesión</a></p>
+                <p>¿Ya tienes cuenta? <Link to="/login" className="font-medium transition-colors text-sky-base hover:text-sky-hover active:text-sky-active">Inicia sesión</Link></p>
             </main>
         </div>
     );
