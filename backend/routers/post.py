@@ -5,6 +5,7 @@ from models.post import Post_manager
 from fastapi.responses import JSONResponse
 from fastapi import status, HTTPException
 from fastapi.encoders import jsonable_encoder
+from services.post import PostService
 
 post_router = APIRouter()
 
@@ -22,6 +23,15 @@ async def create_post( post: Post, request:Request):
              raise ValueError("the post hasnt been created")
         
         return JSONResponse(status_code=status.HTTP_201_CREATED , content={"success" : True , "post" : jsonable_encoder(post), "message" : "Post has been created succesfully"})
+
+@post_router.get("/statistics", tags=["Post Statistics"], response_model=Post, status_code=200, dependencies=[Depends(JWTBearer())])
+def statistics(request: Request) -> Post:   
+    try:
+        id = request.state.user["id"]
+        statistics = PostService().statistics(id)
+        return JSONResponse(status_code=200, content={"success": True, "data": jsonable_encoder(statistics), "message" : "statistics found"})
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"success": False, "data": None, "message": str(e)})
     
 
 
