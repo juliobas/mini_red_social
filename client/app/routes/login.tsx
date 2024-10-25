@@ -9,7 +9,7 @@ export default function Login () {
     const [pass, setPass] = useState('');
     return (
         <div className="min-h-dvh center-full">
-            <main className="min-h-dvh center-full w-90-auto max-w-[400px] md:border-[1px] md:border-gray-low md:px-[40px] md:max-w-[480px] md:rounded-2xl md:min-h-[700px]">
+            <main className="min-h-dvh center-full py-[80px] w-90-auto max-w-[400px] md:border-[1px] md:border-gray-low md:px-[40px] md:max-w-[480px] md:rounded-2xl md:min-h-[700px]">
                 <div className="text-4xl font-bold mb-6 flex space-x-3">
                     <RiCameraLensLine />
                 <h1>Instaflare</h1> 
