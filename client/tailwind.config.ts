@@ -23,6 +23,7 @@ export default {
           pearl: "#67FFCA",
           blue: "#80D4FF",
         },
+        red: "#FF5353",
       },
       fontFamily: {
         sans: [

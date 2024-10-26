@@ -34,7 +34,6 @@ export default function Login () {
     const [emailErrorMessage, setEmailErrorMessage] = useState('');
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
     const message = useActionData<typeof action>();
-    console.log(message)
 
     useEffect(() => {
         if (email.length > 0 && pass.length > 5) {
@@ -46,16 +45,20 @@ export default function Login () {
 
     useEffect(() => {
         switch(message) {
-            case LoginError.NotFoundEmail: setEmailErrorMessage("Email incorrecto");
+            case LoginError.NotFoundEmail: 
+                setEmailErrorMessage("Email incorrecto");
+                setPasswordErrorMessage("")
             break;
-            case LoginError.IncorrectPassword: setPasswordErrorMessage("Contraseña incorrecta");
+            case LoginError.IncorrectPassword: 
+                setEmailErrorMessage("");
+                setPasswordErrorMessage("Contraseña incorrecta");
             break;
             default: setEmailErrorMessage('');
         }
         if (message === LoginError.NotFoundEmail) {
             setEmailErrorMessage("Email incorrecto")
         }
-    }, [message])
+    }, [message]);
 
     return (
         <div className="min-h-dvh center-full">
@@ -73,7 +76,7 @@ export default function Login () {
                     <label  className="flex flex-col space-y-3 relative">
                         <span className="text-sm font-medium">Correo electrónico</span>
                         <input
-                            className="text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full"
+                            className={`${emailErrorMessage && 'border-red'} text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full`}
                             aria-label="Correo electrónico"
                             name="email"
                             type="email"
@@ -82,7 +85,7 @@ export default function Login () {
                         />
                         {
                             emailErrorMessage &&
-                            <span className="absolute bottom-[-25px] text-xs">{emailErrorMessage}</span>
+                            <span className="absolute bottom-[-25px] text-xs text-red">{emailErrorMessage}</span>
                         }
                         
                     </label>
@@ -90,7 +93,7 @@ export default function Login () {
                     <label className="flex flex-col space-y-3 relative">
                         <span className="text-sm font-medium">Contraseña</span>
                         <input
-                            className="text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full"
+                            className={`${passwordErrorMessage && 'border-red'} text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full`}
                             aria-label="contraseña"
                             name="password"
                             type="password" 
@@ -99,7 +102,7 @@ export default function Login () {
                         />
                         {
                             passwordErrorMessage &&
-                            <span className="absolute bottom-[-25px] text-xs">{passwordErrorMessage}</span>
+                            <span className="absolute bottom-[-25px] text-xs text-red">{passwordErrorMessage}</span>
                         }
                     </label>
 
