@@ -15,6 +15,8 @@ export default {
           hover: "#161616",
           active: "#181A1B",
           low: "#585353",
+          lowest: "#252527",
+          clear: "#9598A1",
         },
         sky: {
           base: "#67F0FF",
@@ -23,6 +25,7 @@ export default {
           pearl: "#67FFCA",
           blue: "#80D4FF",
         },
+        red: "#FF5353",
       },
       fontFamily: {
         sans: [
@@ -39,6 +42,9 @@ export default {
       boxShadow: {
         'glow-sm': '0 0 7px 2px rgba(0, 0, 0, 0.1)',
         'glow-lg': '0 0 8px 4px rgba(0, 0, 0, 0.1)',
+      },
+      gridTemplateRows: {
+        'layout': '1fr auto',
       },
     },
   },

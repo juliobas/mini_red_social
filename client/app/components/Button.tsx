@@ -7,7 +7,7 @@ export default function Button({ children, state }: { children: string, state: B
     return (
         <button
             className={`bg-gray-base px-6 h-[40px] text-center font-bold w-full rounded-full transition-colors ${buttonState}`}
-            type="submit"
+            type={`${state === ButtonState.Active ? 'submit': 'button'}`}
         >{children}</button>
     );
 }
