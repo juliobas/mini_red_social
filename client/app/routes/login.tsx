@@ -4,7 +4,14 @@ import { ButtonState, LoginError } from "~/utilities/enums";
 import { ErrorResponse } from "~/utilities/types";
 import { RiCameraLensLine } from "react-icons/ri";
 import { useEffect, useState } from "react";
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, createCookie } from "@remix-run/node";
+
+const authCookie = createCookie("auth-token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7 ,
+  });
 
 export const action = async ({ request }: ActionFunctionArgs) => {
     const body = Object.fromEntries(await request.formData());
@@ -18,7 +25,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         headers: headers,
     });
     if (response.ok) {
-        return redirect("/")
+        // return redirect("/")
+        const data = await response.json();
+        const token = data.data;
+        console.log("token", token)
+        return redirect("/", {
+            headers: {
+              "Set-Cookie": await authCookie.serialize(token),
+            },
+          });
     }
 
     const data: ErrorResponse = await response.json();
