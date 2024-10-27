@@ -51,7 +51,7 @@ export default function Index() {
     <main className="w-full space-y-4 divide-y divide-gray-lowest">
       {posts.map(post =>
         <Post
-          id={post.id.toString()} 
+          key={post.id.toString()} 
           username={`nombre-de-usuario`}
           userimage={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXx2xFk_wEb1hLQoDo4Ar3YbhosCPyOCfOgA&s`}
           image={post.image}

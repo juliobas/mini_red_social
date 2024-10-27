@@ -4,7 +4,6 @@ import Like from "./Like";
 
 export default function Post(props: UserPost) {
     const {
-        id,
         username,
         userimage,
         image,
