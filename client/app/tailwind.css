@@ -11,6 +11,15 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+input::file-selector-button {
+  @apply text-sm text-white-full bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full;
+  /* font-weight: bold;
+  color: dodgerblue;
+  padding: 0.5em;
+  border: thin solid grey;
+  border-radius: 3px; */
+}
+
 
 @layer components {
   .center-full {
