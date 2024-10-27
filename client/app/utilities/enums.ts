@@ -10,6 +10,6 @@ export enum LoginError {
 
 export enum PathName {
     Feed = '/',
-    Post = 'post',
+    Post = '/post',
     User = '/user',
 }
