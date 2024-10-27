@@ -1,9 +1,10 @@
-import { Form, useSubmit, useActionData } from "@remix-run/react";
+import { Form, useSubmit, useActionData, redirect } from "@remix-run/react";
 import Button from "~/components/Button";
 import { ButtonState } from "~/utilities/enums";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { useState } from "react";
 import { authCookie } from "~/utilities/utils";
+import { customAlphabet } from 'nanoid'
 
 export const action = async  ({ request }: ActionFunctionArgs) => {
     const formData = await request.formData();
@@ -19,7 +20,7 @@ export const action = async  ({ request }: ActionFunctionArgs) => {
 const imageAction = async (form: FormData) => {
     const imageFile = form.get('image');
     const body = Object.fromEntries(form);
-    console.log(body.image)
+    // console.log(body.image)
 
     if (!imageFile || !(imageFile instanceof File)) {
         return json( {ok: false, message: "error al cargar imagen", url:""});
@@ -48,45 +49,54 @@ const imageAction = async (form: FormData) => {
 
 const postAction = async (form: FormData, request: Request) => {
     const cookieHeader = request.headers.get("Cookie");
-    const token = await authCookie.parse(cookieHeader);
+    const { token, id } = await authCookie.parse(cookieHeader);
     console.log(token)
 
     if (!token) {
         throw new Response("Unauthorized", { status: 401 });
     }
 
+    // ID
+    const nanoid = customAlphabet('1234567890', 10)
+
+    // BODY - IMAGE
+    const formEntries = Object.fromEntries(form);
+    console.log(formEntries)
+
+    // POST_DATE
+    const currentDate = new Date(Date.now());
+    const year = currentDate.getFullYear().toString();
+    const premonth = (currentDate.getMonth() + 1).toString();
+    const month = premonth.length === 1 ? "0"+premonth : premonth;
+    const preday = currentDate.getDate().toString();
+    const day = preday.length === 1 ? "0"+preday : preday;
+
     // const body = Object.fromEntries();
     const body = {
-            "id": 0,
-            "body": "string",
-            "image": "string",
-            "post_date": "2024-10-25",
-            "user_id": 0
-        };
-    // const headers = new Headers();
-    // headers.append("Content-Type", "application/json");
+        "id": Number(nanoid()),
+        "body": formEntries.body,
+        "image": formEntries.image,
+        "post_date": `${year}-${month}-${day}`,
+        "user_id": id
+    };
+    // console.log("body", body)
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Authorization", `Bearer ${token}`)
 
-    // const response = await fetch("http://localhost:8000/api/post/createPost", {
-    //     method: "POST",
-    //     body: JSON.stringify(body),
-    //     headers: headers,
-    // });
+    const response = await fetch("http://localhost:8000/api/post/createPost", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: headers,
+    });
 
+    if (response.ok) {
+        console.log("new post created", await response.json());
+        return redirect("/");
+    }
 
-
-    // const cookieHeader = request.headers.get("Cookie");
-    // const token = await authCookie.parse(cookieHeader);
-
-    // if (!token) {
-    //     throw new Response("Unauthorized", { status: 401 });
-    // }
+    console.log("error when creating new post", response)
     return json( {ok: false, message: "error al cargar imagen", url:""});
-
-    // return redirect("/", {
-    //     headers: {
-    //       "Set-Cookie": await authCookie.serialize(token),
-    //     },
-    //   });
 }
 
 export default function CreatePost() {
@@ -131,6 +141,7 @@ export default function CreatePost() {
             
             <Form method="post" className="space-y-4">
                 <input type="hidden" name="formType" value="post" />
+                <input type="hidden" name="image" value={imageUrl?.url} />
                 <label  className="flex flex-col space-y-3 relative">
                     <span className="text-sm font-medium">Agrega una descripción</span>
                     <input
