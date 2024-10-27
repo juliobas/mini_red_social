@@ -25,10 +25,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         headers: headers,
     });
     if (response.ok) {
-        // return redirect("/")
         const data = await response.json();
         const token = data.data;
-        console.log("token", token)
         return redirect("/", {
             headers: {
               "Set-Cookie": await authCookie.serialize(token),
@@ -37,8 +35,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     const data: ErrorResponse = await response.json();
-    console.log(data.message)
-
     return data.message;
 };
 
