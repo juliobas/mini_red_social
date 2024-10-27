@@ -15,7 +15,8 @@ export default {
           hover: "#161616",
           active: "#181A1B",
           low: "#585353",
-          lowest: "#252527"
+          lowest: "#252527",
+          clear: "#9598A1",
         },
         sky: {
           base: "#67F0FF",

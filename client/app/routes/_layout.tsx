@@ -5,6 +5,7 @@ export default function Layout() {
     return(
         <main className="grid grid-rows-layout min-h-dvh">
             <Outlet />
+            <div className="h-[75px]"></div> // Espacio abajo
             <Navbar />
         </main>
     )
