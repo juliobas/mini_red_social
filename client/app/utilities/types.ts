@@ -6,7 +6,7 @@ export type ErrorResponse = {
 }
 
 export type UserPost = {
-    id: string
+    key: string
     username: string,
     userimage: string,
     image: string,

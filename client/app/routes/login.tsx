@@ -4,20 +4,16 @@ import { ButtonState, LoginError } from "~/utilities/enums";
 import { ErrorResponse } from "~/utilities/types";
 import { RiCameraLensLine } from "react-icons/ri";
 import { useEffect, useState } from "react";
-import { ActionFunctionArgs, createCookie } from "@remix-run/node";
-
-const authCookie = createCookie("auth-token", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7 ,
-  });
+import { ActionFunctionArgs } from "@remix-run/node";
+import { authCookie } from "~/utilities/utils";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
     const body = Object.fromEntries(await request.formData());
 
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
+
+
 
     const response = await fetch("http://localhost:8000/api/auth/login", {
         method: "POST",
@@ -27,9 +23,30 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (response.ok) {
         const data = await response.json();
         const token = data.data;
+
+        headers.append("Authorization", `Bearer ${token}`)
+        const userResponse = await fetch("http://localhost:8000/api/user/my_profile", {
+            method: "GET",
+            headers: headers,
+        });
+
+        // console.log(userResponse.)
+        const dat = await userResponse.json();
+
+        const user = {
+            id: dat.data.id,
+            name: dat.data.name,
+            email: dat.data.email,
+            avatar: dat.data.avatar,
+            token: token,
+        };
+        console.log(user)
+
+        const authCookieHeader = await authCookie.serialize(user);
+
         return redirect("/", {
             headers: {
-              "Set-Cookie": await authCookie.serialize(token),
+              "Set-Cookie": authCookieHeader,
             },
           });
     }
