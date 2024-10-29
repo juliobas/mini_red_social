@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, Request
-from schemas.post_schema import Post
+from schemas.post_schema import Post, PostFeed
 from middlewares.jwt_bearer import JWTBearer
 from models.post import Post_manager
 from fastapi.responses import JSONResponse
 from fastapi import status, HTTPException
 from fastapi.encoders import jsonable_encoder
+from services.posts import Post as Posts
 from services.post import PostService
 
 post_router = APIRouter()
@@ -23,6 +24,19 @@ async def create_post( post: Post, request:Request):
              raise ValueError("the post hasnt been created")
         
         return JSONResponse(status_code=status.HTTP_201_CREATED , content={"success" : True , "post" : jsonable_encoder(post), "message" : "Post has been created succesfully"})
+
+
+
+@post_router.get("/", tags=["post"],status_code=200,dependencies=[Depends(JWTBearer())])
+async def get_posts(request: Request):
+      id = request.state.user["id"]
+      posts = Post_manager().get_posts()
+      print(posts)
+      posts_ensambled = Posts.esambly_posts(posts)
+
+      return posts_ensambled
+
+
 
 @post_router.get("/statistics", tags=["Post Statistics"], response_model=Post, status_code=200, dependencies=[Depends(JWTBearer())])
 def statistics(request: Request) -> Post:   
