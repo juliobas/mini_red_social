@@ -17,6 +17,26 @@ class Post_manager:
         self.db.commit()
         self.db.close()
         return True
+    
+    def statistics(self, user_id):
+        cursor = self.db.cursor()
+        cursor.execute('''SELECT 
+                            p.user_id AS user_id,
+                            COUNT(DISTINCT lc.id) AS total_comments,
+                            COUNT(DISTINCT pl.id) AS total_likes
+                        FROM 
+                            posts p
+                        LEFT JOIN post_comments lc ON p.id = lc.post_id
+                        LEFT JOIN post_likes pl ON p.id = pl.post_id
+                        WHERE 
+                            p.user_id = ?
+                        GROUP BY 
+                            p.user_id;''', (user_id,))
+        row = cursor.fetchone()
+        self.db.close()
+        if row:
+            return row_to_dict(row)
+        return None
 
     def get_posts(self):
         cursor = self.db.cursor()

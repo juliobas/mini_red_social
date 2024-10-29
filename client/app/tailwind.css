@@ -1,12 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply bg-black111 text-white-full;
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+  font-family: "Roboto", sans-serif;
+}
+
+input::file-selector-button {
+  @apply text-sm text-white-full bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full;
+  /* font-weight: bold;
+  color: dodgerblue;
+  padding: 0.5em;
+  border: thin solid grey;
+  border-radius: 3px; */
+}
+
+
+@layer components {
+  .center-full {
+    @apply flex flex-col items-center justify-center;
+  }
+  .w-90-auto {
+    @apply w-[90%] mx-auto;
   }
 }

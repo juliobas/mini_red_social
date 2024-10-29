@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from fastapi import status, HTTPException
 from fastapi.encoders import jsonable_encoder
 from services.posts import Post as Posts
+from services.post import PostService
 
 post_router = APIRouter()
 
@@ -37,6 +38,15 @@ async def get_posts(request: Request):
 
 
 
+@post_router.get("/statistics", tags=["Post Statistics"], response_model=Post, status_code=200, dependencies=[Depends(JWTBearer())])
+def statistics(request: Request) -> Post:   
+    try:
+        id = request.state.user["id"]
+        statistics = PostService().statistics(id)
+        return JSONResponse(status_code=200, content={"success": True, "data": jsonable_encoder(statistics), "message" : "statistics found"})
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"success": False, "data": None, "message": str(e)})
+    
 
 
 
