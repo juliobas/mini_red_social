@@ -27,14 +27,13 @@ async def create_post( post: Post, request:Request):
 
 
 
-@post_router.get("/", tags=["post"],status_code=200,dependencies=[Depends(JWTBearer())])
+@post_router.get("/", tags=["List Post"],status_code=200,dependencies=[Depends(JWTBearer())])
 async def get_posts(request: Request):
-      id = request.state.user["id"]
-      posts = Post_manager().get_posts()
-      print(posts)
-      posts_ensambled = Posts.esambly_posts(posts)
-
-      return posts_ensambled
+    try:
+        posts = PostService().get_posts()
+        return JSONResponse(status_code=200, content={"success": True, "data": jsonable_encoder(posts), "message" : "posts found"})
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"success": False, "data": None, "message": str(e)})
 
 
 

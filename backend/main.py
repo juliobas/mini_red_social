@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import uvicorn
 
 #Routes
 from routers.auth import auth_router
@@ -16,3 +17,6 @@ app.include_router(user_router, prefix="/api/user")
 app.include_router(post_router, prefix="/api/post")
 app.include_router(post_likes_router, prefix="/api/post_likes")
 app.include_router(post_comments_router, prefix="/api/post_comments")
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

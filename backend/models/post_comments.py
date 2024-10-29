@@ -13,6 +13,29 @@ class PostComments:
         if row:
             return row_to_dict(row)
         return None
+    
+    def get_by_post_id(self, post_id):
+        cursor = self.db.cursor()
+        cursor.execute('''
+            SELECT 
+                pc.id, 
+                pc.body, 
+                pc.post_id, 
+                pc.user_id, 
+                pc.comment_date,
+                u.name AS user_name,
+                u.email AS user_email,
+                u.avatar AS user_avatar
+            FROM 
+                post_comments pc
+            JOIN 
+                users u ON pc.user_id = u.id
+            WHERE 
+                pc.post_id = ?
+        ''', (post_id,))
+        rows = cursor.fetchall()
+        self.db.close()
+        return [row_to_dict(row) for row in rows]
 
     def create_comment(self, post_comments):
         cursor = self.db.cursor()
