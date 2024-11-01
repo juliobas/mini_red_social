@@ -4,21 +4,25 @@ import Like from "./Like";
 
 export default function Post(props: UserPost) {
     const {
-        username,
-        userimage,
-        image,
+        userId,
         body,
+        image,
         date,
-        likes,
         comments,
+        likes,
+        listComments,
     } = props;
+
+
+    const dateformat = date.replaceAll('-', '/')
 
     const day = 86400000;
     const weekday = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado']
-    const postDate = new Date(date);
-    const today = new Date(Date.now());
-    const difference = today.getTime() - postDate.getTime();
+    const postDate = new Date(dateformat);
+    const today = Date.now();
+    const difference = today - postDate.getTime();
     let d: string;
+
     if (difference < day) {
         d = "hoy";
     } else if (difference < 2*day) {
@@ -29,15 +33,14 @@ export default function Post(props: UserPost) {
         d = date;
     }
 
-
     return(
         <div className="w-full space-y-2 pt-4">
             <div className="flex items-center w-90-auto space-x-3">
                 <img 
                     className="w-10 rounded-full"
-                    src={userimage} alt="user image"
+                    src='https://media.tenor.com/t3dLLNaI50oAAAAM/cat-cats.gif' alt="user image"
                 />
-                <span className="font-bold">{username}</span>
+                <span className="font-bold">perrillo123</span>
             </div>
             <img 
                 className="w-full"

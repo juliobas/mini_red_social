@@ -1,64 +1,51 @@
-import { createCookie } from "@remix-run/node";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { data, useLoaderData } from "@remix-run/react";
 import Post from "~/components/Post";
-
-const authCookie = createCookie("auth-token", {
-  httpOnly: true,
-  secure: true,
-  sameSite: "lax",
-  maxAge: 60 * 60 * 24 * 7
-});
-
-const posts = [
-  {
-    "id": 0,
-    "body": "Hola 123 hola 123 hola 123 hola 123 hola 123 hola 123",
-    "image": "https://4kwallpapers.com/images/wallpapers/spider-man-into-the-spider-verse-miles-morales-spider-man-2048x2048-2948.jpg",
-    "post_date": "2024-10-25",
-    "user_id": 0
-  },
-  {
-    "id": 2,
-    "body": "bla bla bla bla bla bla",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFges80QlNtNK4oYRdqv4ONvBSjQI4aiwLpg&s",
-    "post_date": "2024-10-26",
-    "user_id": 1
-  },
-  {
-    "id": 3,
-    "body": "aaaa bbbbbb ccc dddd rrr ggg",
-    "image": "https://i.pinimg.com/736x/2b/f6/ea/2bf6eab40d79d043d24369e3e1e3c69d.jpg",
-    "post_date": "2024-10-26",
-    "user_id": 2
-  },
-];
+import { authCookie } from "~/utilities/utils";
+import type { endpointPosts } from "~/utilities/types";
 
 export const loader = async ({ request }: LoaderFunctionArgs ) => {
   const cookieHeader = request.headers.get("Cookie");
-  const token = await authCookie.parse(cookieHeader);
+  const { token } = await authCookie.parse(cookieHeader);
 
   if (!token) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  return "posts";
+  let posts;
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${token}`)
+    const response = await fetch("http://localhost:8000/api/post/", {
+      method: "GET",
+      headers: headers,
+    });
+    
+    const data = await response.json();
+    posts = data.data;
+  } catch (e ) {
+    console.log('error', e)
+  }
+
+  return posts;
 };
 
 export default function Index() {
-  const data = useLoaderData<typeof loader>();
+  const posts: endpointPosts = useLoaderData<typeof loader>();
+  console.log(posts)
+  posts.sort((a, b) => Date.parse(b.post_created_at) - Date.parse(a.post_created_at))
   return (
     <main className="w-full space-y-4 divide-y divide-gray-lowest">
       {posts.map(post =>
         <Post
-          key={post.id.toString()} 
-          username={`nombre-de-usuario`}
-          userimage={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXx2xFk_wEb1hLQoDo4Ar3YbhosCPyOCfOgA&s`}
-          image={post.image}
-          body={post.body}
-          date={post.post_date}
-          likes={11}
-          comments={6}
+          key={post.id.toString()}
+          userId={post.post_user_id.toString()}
+          body={post.post_body} 
+          image={post.post_image_url}
+          date={post.post_created_at}
+          comments={post.no_comments}
+          likes={post.no_likes}
+          listComments=""
         />
       )}
       
