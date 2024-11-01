@@ -10,7 +10,7 @@ from models.user import User as UserModel
 
 user_router = APIRouter()
 
-@user_router.get("/my_profile", tags=["user"], response_model=User, status_code=200, dependencies=[Depends(JWTBearer())])
+@user_router.get("/my_profile", tags=["Users"], response_model=User, status_code=200, dependencies=[Depends(JWTBearer())])
 def myProfile(request: Request) -> User:   
     try:
         id = request.state.user["id"]
@@ -22,7 +22,7 @@ def myProfile(request: Request) -> User:
 
 
 
-@user_router.put("/update", tags=["user"], status_code=200,dependencies=[Depends(JWTBearer())])
+@user_router.put("/update", tags=["Users"], status_code=200,dependencies=[Depends(JWTBearer())])
 def updateProfile(user:UserUpdate, request:Request):
         try:
             id = request.state.user["id"]

@@ -10,7 +10,7 @@ from services.post import PostService
 
 post_router = APIRouter()
 
-@post_router.post("/createPost", tags=["post"],status_code=200,response_model=Post ,dependencies=[Depends(JWTBearer())])
+@post_router.post("/createPost", tags=["Posts"],status_code=200,response_model=Post ,dependencies=[Depends(JWTBearer())])
 async def create_post( post: Post, request:Request):
         
         id_token = request.state.user["id"]
@@ -27,17 +27,27 @@ async def create_post( post: Post, request:Request):
 
 
 
-@post_router.get("/", tags=["List Post"],status_code=200,dependencies=[Depends(JWTBearer())])
+@post_router.get("/", tags=["Posts"],status_code=200,dependencies=[Depends(JWTBearer())])
 async def get_posts(request: Request):
     try:
-        posts = PostService().get_posts()
+        id_token = request.state.user["id"]
+        posts = PostService().get_posts(id_token)
+        return JSONResponse(status_code=200, content={"success": True, "data": jsonable_encoder(posts), "message" : "posts found"})
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"success": False, "data": None, "message": str(e)})
+
+@post_router.get("/my", tags=["Posts"],status_code=200,dependencies=[Depends(JWTBearer())])
+async def get_my_posts(request: Request):
+    try:
+        id_token = request.state.user["id"]
+        posts = PostService().get_my_posts(id_token)
         return JSONResponse(status_code=200, content={"success": True, "data": jsonable_encoder(posts), "message" : "posts found"})
     except ValueError as e:
         return JSONResponse(status_code=400, content={"success": False, "data": None, "message": str(e)})
 
 
 
-@post_router.get("/statistics", tags=["Post Statistics"], response_model=Post, status_code=200, dependencies=[Depends(JWTBearer())])
+@post_router.get("/statistics", tags=["Posts"], response_model=Post, status_code=200, dependencies=[Depends(JWTBearer())])
 def statistics(request: Request) -> Post:   
     try:
         id = request.state.user["id"]

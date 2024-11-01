@@ -9,7 +9,7 @@ from middlewares.jwt_bearer import JWTBearer
 
 post_comments_router = APIRouter()
 
-@post_comments_router.post("/", tags=["post_comments"], response_model=PostComments, status_code=200, dependencies=[Depends(JWTBearer())])
+@post_comments_router.post("/", tags=["Post Comments"], response_model=PostComments, status_code=200, dependencies=[Depends(JWTBearer())])
 def create_post_comment(request: Request, post_comments: PostComments) -> PostComments:   
     try:
         id = request.state.user["id"]
