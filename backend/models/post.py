@@ -38,7 +38,7 @@ class Post_manager:
             return row_to_dict(row)
         return None
 
-    def get_posts(self):
+    def get_posts(self, user_id):
         cursor = self.db.cursor()
         
         query = """
@@ -48,6 +48,52 @@ class Post_manager:
             posts.body AS post_body,
             posts.image_url AS post_image_url,
             posts.post_date AS post_created_at,
+            users.name AS user_name,
+            users.email AS user_email,
+            users.avatar AS user_avatar,
+            COUNT(post_comments.id) AS no_comments,
+            COUNT(post_likes.id) AS no_likes,
+            EXISTS (
+                SELECT 1 
+                FROM post_likes 
+                WHERE post_likes.post_id = posts.id 
+                AND post_likes.user_id = ?
+            ) AS liked
+        FROM 
+            posts
+        LEFT JOIN 
+            post_comments ON posts.id = post_comments.post_id
+        LEFT JOIN 
+            post_likes ON posts.id = post_likes.post_id
+        JOIN 
+            users ON posts.user_id = users.id
+        GROUP BY 
+            posts.id, posts.user_id, posts.body, posts.image_url, posts.post_date;
+
+        """
+        
+        cursor.execute(query, (user_id,))
+        rows = cursor.fetchall()
+        self.db.close()
+        
+        # Convierte cada fila de resultados en un diccionario usando una función de ayuda
+        posts = [row_to_dict(row) for row in rows]
+        
+        return posts
+    
+    def get_my_posts(self, user_id):
+        cursor = self.db.cursor()
+        
+        query = """
+        SELECT 
+            posts.id,
+            posts.user_id AS post_user_id,
+            posts.body AS post_body,
+            posts.image_url AS post_image_url,
+            posts.post_date AS post_created_at,
+            users.name AS user_name,
+            users.email AS user_email,
+            users.avatar AS user_avatar,
             COUNT(post_comments.id) AS no_comments,
             COUNT(post_likes.id) AS no_likes
         FROM 
@@ -56,12 +102,16 @@ class Post_manager:
             post_comments ON posts.id = post_comments.post_id
         LEFT JOIN 
             post_likes ON posts.id = post_likes.post_id
+        JOIN 
+            users ON posts.user_id = users.id
+        WHERE
+            posts.user_id = ?
         GROUP BY 
             posts.id, posts.user_id, posts.body, posts.image_url, posts.post_date;
 
         """
         
-        cursor.execute(query)
+        cursor.execute(query, (user_id,))
         rows = cursor.fetchall()
         self.db.close()
         

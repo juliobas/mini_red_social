@@ -9,7 +9,7 @@ from middlewares.jwt_bearer import JWTBearer
 
 post_likes_router = APIRouter()
 
-@post_likes_router.post("/", tags=["post_likes"], response_model=PostLikes, status_code=200, dependencies=[Depends(JWTBearer())])
+@post_likes_router.post("/", tags=["Post Likes"], response_model=PostLikes, status_code=200, dependencies=[Depends(JWTBearer())])
 def create_post_likes(request: Request, post_likes: PostLikes) -> PostLikes:   
     try:
         id = request.state.user["id"]

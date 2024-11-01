@@ -7,7 +7,7 @@ from services.auth import AuthService
 
 auth_router = APIRouter()
 
-@auth_router.post("/register", tags=["auth"])
+@auth_router.post("/register", tags=["Auth"])
 def register(user: User):
     try:
         AuthService().register_user(user)
@@ -16,7 +16,7 @@ def register(user: User):
         return JSONResponse(status_code=400, content={"success": False, "data": None, "message": str(e)})
     
 
-@auth_router.post("/login")
+@auth_router.post("/login", tags=["Auth"])
 def login(user: UserLogin):
     try:
         token = AuthService().login_user(user)

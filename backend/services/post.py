@@ -12,8 +12,15 @@ class PostService:
 
         return statistics
     
-    def get_posts(self):
-        posts = PostModel().get_posts()
+    def get_posts(self, user_id):
+        posts = PostModel().get_posts(user_id)
+        for post in posts:
+            comments = PostCommentsModel().get_by_post_id(post["id"])
+            post["comments"] = comments
+        return posts
+    
+    def get_my_posts(self, user_id):
+        posts = PostModel().get_my_posts(user_id)
         for post in posts:
             comments = PostCommentsModel().get_by_post_id(post["id"])
             post["comments"] = comments
