@@ -3,32 +3,40 @@ import Button from "~/components/Button";
 import { ButtonState } from "~/utilities/enums";
 import { RiCameraLensLine } from "react-icons/ri";
 import { useState } from "react";
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, redirect } from "@remix-run/node";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
     const form = Object.fromEntries(await request.formData());
-    console.log(form)
 
-    // const body = {
-    //         "id": 0,
-    //         "name": "string",
-    //         "email": "string",
-    //         "password": "string",
-    //         "avatar": "string"
-    //     }
+    const body = {
+            "id": 0,
+            "name": form.name,
+            "email": form.email,
+            "password": form.pass,
+            "avatar": ""
+        }
 
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
 
-    // const headers = new Headers();
-    // headers.append("Content-Type", "application/json");
+    try {
 
-   
+        const response = await fetch("http://localhost:8000/api/auth/register", {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: headers,
+        });
+    
+        if (!response.ok) {
+            return ""
+        }
 
+        console.log("registro correcto");
 
-    // const response = await fetch("http://localhost:8000/api/auth/register", {
-    //     method: "POST",
-    //     body: JSON.stringify(body),
-    //     headers: headers,
-    // });
+    } catch (e) {
+        console.log(e)
+    }
+
     // if (response.ok) {
     //     const data = await response.json();
     //     const token = data.data;
