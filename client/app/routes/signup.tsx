@@ -107,6 +107,14 @@ export default function Signup() {
             setUsernameError('');
         }
     };
+    const buttonState = () => {
+        return (
+            username.length > 0 &&
+            email.length > 0 &&
+            pass.length > 5 &&
+            !(usernameError || emailError || passError || pass2Error)
+        );
+    };
 
     return (
         <div className="min-h-dvh center-full">
@@ -191,7 +199,7 @@ export default function Signup() {
                     </label>
 
                     <Button // Revisar estado del boton en base a errores tambien
-                        state={ email.length > 0 && pass.length > 5 ? ButtonState.Active : ButtonState.Inactive}
+                        state={ buttonState() ? ButtonState.Active : ButtonState.Inactive}
                     >
                         Registrarse
                     </Button>
