@@ -73,24 +73,40 @@ export default function Signup() {
 
     const [passError, setPassError] = useState('');
     const [pass2Error, setPass2Error] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [usernameError, setUsernameError] = useState('');
 
     const checkPass = (pass: string) => {
         const passregex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
         if (!passregex.test(pass)) {
-            setPassError('Debe incluir letras y numeros, al menos 6 carácteres');
+            setPassError('Debe incluir al menos 6 carácteres, letras y numeros');
         } else {
-            console.log(`pasa '${pass}'`)
             setPassError('');
         }
     };
     const checkPass2 = (pass2: string) => {
         if (pass2 !== pass) {
-            setPass2Error('Las conatraseñas no coinciden');
+            setPass2Error('Las contraseñas no coinciden');
         } else {
-            console.log(`pasa '${pass}'`)
             setPass2Error('');
         }
-    }
+    };
+    const checkEmail = (email: string) => {
+        const emailregex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        if (!emailregex.test(email)) {
+            setEmailError('Correo no válido');
+        } else {
+            setEmailError('');
+        }
+    };
+    const checkUsername = (username: string) => {
+        setUsername(username.trim());
+        if (username.trim().length < 1) {
+            setUsernameError('El nombre no puede estar vacio');
+        } else {
+            setUsernameError('');
+        }
+    };
 
     return (
         <div className="min-h-dvh center-full">
@@ -104,29 +120,38 @@ export default function Signup() {
                 <Form method="POST"
                     className="w-full space-y-10 mb-6"
                 >
-                    <label  className="flex flex-col space-y-3">
+                    <label  className="relative flex flex-col space-y-3">
                         <span className="text-sm font-medium">Nombre de usuario</span>
                         <input
-                            className="text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full"
+                            className={`${usernameError && 'border-red'} text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full`}
                             aria-label="Correo electrónico"
                             name="name"
                             type="text"
                             value={username}
-                            onChange={v => setUsername(v.target.value)} 
+                            onChange={v => setUsername(v.target.value)}
+                            onBlur={v => checkUsername(v.target.value)}
                         />
+                        {
+                            usernameError &&
+                            <span className="absolute bottom-[-25px] text-xs text-red">{usernameError}</span>
+                        }
                     </label>
 
-                    <label  className="flex flex-col space-y-3">
+                    <label  className="relative flex flex-col space-y-3">
                         <span className="text-sm font-medium">Correo electrónico</span>
                         <input
-                            className={` text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full`}
+                            className={`${emailError && 'border-red'} text-sm bg-black111 border-[1px] border-gray-low rounded-full h-[40px] px-6 outline-none transition-colors focus:border-white-full`}
                             aria-label="Correo electrónico"
                             name="email"
                             type="email"
                             value={email}
-                            onChange={v => setEmail(v.target.value)} 
+                            onChange={v => setEmail(v.target.value)}
+                            onBlur={v => checkEmail(v.target.value)}
                         />
-                        
+                        {
+                            emailError &&
+                            <span className="absolute bottom-[-25px] text-xs text-red">{emailError}</span>
+                        }
                     </label>
 
                     <label className="relative flex flex-col space-y-3">
