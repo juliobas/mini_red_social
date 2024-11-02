@@ -120,6 +120,7 @@ export default function Signup() {
             username.length > 0 &&
             email.length > 0 &&
             pass.length > 5 &&
+            pass2.length > 5 &&
             !(usernameError || emailError || passError || pass2Error)
         );
     };
