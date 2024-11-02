@@ -1,4 +1,4 @@
-import { Form, Link, redirect, useActionData } from "@remix-run/react";
+import { Form, Link, redirect, useActionData, useSearchParams } from "@remix-run/react";
 import Button from "~/components/Button";
 import { ButtonState, LoginError } from "~/utilities/enums";
 import { ErrorResponse } from "~/utilities/types";
@@ -30,7 +30,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             headers: headers,
         });
 
-        // console.log(userResponse.)
         const dat = await userResponse.json();
 
         const user = {
@@ -62,6 +61,7 @@ export default function Login () {
     const [emailErrorMessage, setEmailErrorMessage] = useState('');
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
     const message = useActionData<typeof action>();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
         if (email.length > 0 && pass.length > 5) {
@@ -96,7 +96,12 @@ export default function Login () {
                 <h1>Instaflare</h1> 
                 </div>
                 <p className="text-lg w-[180px] text-center mb-12"><span className="text-sky-pearl">Comparte</span> tu mundo y <span className="text-sky-blue">descubre</span> otros.</p>
-
+                {
+                    searchParams.has('signup', 'ok') &&
+                    <p className="font-medium text-center mb-5 border border-sky-base rounded-3xl py-3 px-8">
+                        Tu registro se hizo correctamente, por favor inicia sesión
+                    </p>
+                }
                 <Form
                     method="post"
                     className="w-full space-y-10 mb-6"

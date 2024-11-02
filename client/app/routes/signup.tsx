@@ -31,10 +31,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             return ""
         }
 
-        console.log("registro correcto");
+        return redirect("/login?signup=ok");
 
     } catch (e) {
-        console.log(e)
+        console.log("error", e)
     }
 
     // if (response.ok) {
