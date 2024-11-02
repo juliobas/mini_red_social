@@ -7,7 +7,8 @@ export type ErrorResponse = {
 
 export type UserPost = {
     key: string,
-    userId: string,
+    postId: number,
+    userId: number,
     body: string,
     image: string,
     date: string,

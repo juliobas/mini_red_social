@@ -4,6 +4,7 @@ import Like from "./Like";
 
 export default function Post(props: UserPost) {
     const {
+        postId,
         userId,
         body,
         image,
@@ -33,6 +34,8 @@ export default function Post(props: UserPost) {
         d = date;
     }
 
+    // const darclic = () => console.log("liked");
+
     return(
         <div className="w-full space-y-2 pt-4">
             <div className="flex items-center w-90-auto space-x-3">
@@ -53,6 +56,8 @@ export default function Post(props: UserPost) {
                     <Like
                         liked={true}
                         className="cursor-pointer"
+                        postId={postId}
+                        userId={userId}
                     />
                 </div>
                 <div className="flex items-center text-2xl space-x-1">
