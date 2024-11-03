@@ -41,7 +41,7 @@ export default function Post(props: UserPost) {
         <div className="w-full space-y-2 pt-4">
             <div className="flex items-center w-90-auto space-x-3">
                 {
-                    avatar.length > 0 ?
+                    (avatar !== "string" && avatar.length > 0) ?
                     <img 
                         className="w-10 rounded-full"
                         src={avatar}
