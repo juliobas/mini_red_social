@@ -7,7 +7,7 @@ export default function Like({ liked, className, postId, userId }: { liked: bool
     formData.append("myKey", "myValue");
 
     return (
-        <Form method="post">
+        <Form method="post" className="flex items-center">
             <input type="hidden" name="postId" value={postId} />
             <input type="hidden" name="userId" value={userId} />
             <button type="submit">
