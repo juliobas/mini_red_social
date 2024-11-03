@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { data, useLoaderData } from "@remix-run/react";
+import { data, redirect, useLoaderData } from "@remix-run/react";
 import Post from "~/components/Post";
 import { authCookie } from "~/utilities/utils";
 import type { endpointPosts } from "~/utilities/types";
@@ -37,12 +37,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const loader = async ({ request }: LoaderFunctionArgs ) => {
   const cookieHeader = request.headers.get("Cookie");
-  const { token } = await authCookie.parse(cookieHeader);
+  const { token, avatar } = await authCookie.parse(cookieHeader);
 
   if (!token) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
+  // Check that the user has a profile picture
+  if (avatar.length === 0 || avatar === "string") {
+    console.log('no tiene avatar then redirect')
+    return redirect('/avatar');
+  }
+
+  // Get posts for the feed
   let posts;
   try {
     const headers = new Headers();
@@ -58,7 +65,7 @@ export const loader = async ({ request }: LoaderFunctionArgs ) => {
     console.log('error', e);
   }
 
-  console.log(posts)
+  // console.log(posts)
   return {posts, token};
 };
 
