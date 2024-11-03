@@ -1,5 +1,5 @@
 import { UserPost } from "~/utilities/types";
-import { RiChat3Line } from "react-icons/ri";
+import { RiChat3Line, RiUser3Fill } from "react-icons/ri";
 import Like from "./Like";
 
 export default function Post(props: UserPost) {
@@ -40,11 +40,16 @@ export default function Post(props: UserPost) {
     return(
         <div className="w-full space-y-2 pt-4">
             <div className="flex items-center w-90-auto space-x-3">
-                <img 
-                    className="w-10 rounded-full"
-                    src='https://media.tenor.com/t3dLLNaI50oAAAAM/cat-cats.gif' alt="user image"
-                />
-                <span className="font-bold">perrillo123</span>
+                {
+                    avatar.length > 0 ?
+                    <img 
+                        className="w-10 rounded-full"
+                        src={avatar}
+                    />:
+                    <RiUser3Fill />
+                }
+                
+                <span className="font-bold">{username}</span>
             </div>
             <img 
                 className="w-full"
