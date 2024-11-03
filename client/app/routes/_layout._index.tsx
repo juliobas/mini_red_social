@@ -58,6 +58,7 @@ export const loader = async ({ request }: LoaderFunctionArgs ) => {
     console.log('error', e);
   }
 
+  console.log(posts)
   return {posts, token};
 };
 
@@ -92,11 +93,14 @@ export default function Index() {
           key={post.id.toString()}
           postId={post.id}
           userId={post.post_user_id}
+          username={post.user_name}
+          avatar={post.user_avatar}
           body={post.post_body} 
           image={post.post_image_url}
           date={post.post_created_at}
           comments={post.no_comments}
           likes={post.no_likes}
+          liked={post.liked}
           listComments=""
         />
       )}

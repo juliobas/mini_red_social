@@ -6,11 +6,14 @@ export default function Post(props: UserPost) {
     const {
         postId,
         userId,
+        username,
+        avatar,
         body,
         image,
         date,
         comments,
         likes,
+        liked,
         listComments,
     } = props;
 
@@ -34,8 +37,6 @@ export default function Post(props: UserPost) {
         d = date;
     }
 
-    // const darclic = () => console.log("liked");
-
     return(
         <div className="w-full space-y-2 pt-4">
             <div className="flex items-center w-90-auto space-x-3">
@@ -54,7 +55,7 @@ export default function Post(props: UserPost) {
                 <div className="flex items-center text-2xl space-x-1">
                     <span className="text-xs font-bold">{likes}</span>
                     <Like
-                        liked={true}
+                        liked={liked === 1}
                         className="cursor-pointer"
                         postId={postId}
                         userId={userId}
