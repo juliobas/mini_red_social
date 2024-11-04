@@ -39,7 +39,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             avatar: dat.data.avatar,
             token: token,
         };
-        console.log(user)
 
         const authCookieHeader = await authCookie.serialize(user);
 

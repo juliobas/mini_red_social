@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs, ActionFunctionArgs, json } from "@remix-run/node";
 import { authCookie } from "~/utilities/utils";
-import { useLoaderData, Form, useSubmit, useActionData } from "@remix-run/react";
+import { useLoaderData, Form, useSubmit, useActionData, redirect } from "@remix-run/react";
 import { useState } from "react";
 import CSS from "csstype";
 import Button from "~/components/Button";
@@ -46,55 +46,42 @@ const imageAction = async (form: FormData) => {
 };
 
 const confirmAction = async (form: FormData, request: Request) => {
-    // const cookieHeader = request.headers.get("Cookie");
-    // const { token, id } = await authCookie.parse(cookieHeader);
-    // console.log(token)
+    const cookieHeader = request.headers.get("Cookie");
+    const { token, name } = await authCookie.parse(cookieHeader);
 
-    // if (!token) {
-    //     throw new Response("Unauthorized", { status: 401 });
-    // }
+    if (!token) {
+        throw new Response("Unauthorized", { status: 401 });
+    }
 
-    // // ID
-    // const nanoid = customAlphabet('1234567890', 10)
 
-    // // BODY - IMAGE
-    // const formEntries = Object.fromEntries(form);
-    // console.log(formEntries)
+    // BODY - IMAGE
+    const formEntries = Object.fromEntries(form);
+    console.log(formEntries)
 
-    // // POST_DATE
-    // const currentDate = new Date(Date.now());
-    // const year = currentDate.getFullYear().toString();
-    // const premonth = (currentDate.getMonth() + 1).toString();
-    // const month = premonth.length === 1 ? "0"+premonth : premonth;
-    // const preday = currentDate.getDate().toString();
-    // const day = preday.length === 1 ? "0"+preday : preday;
+    // const body = Object.fromEntries();
+    const body = {
+        "name": name,
+        "password": '',
+        "avatar": formEntries.image,
+    };
+    console.log("body", body)
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Authorization", `Bearer ${token}`)
 
-    // // const body = Object.fromEntries();
-    // const body = {
-    //     "id": Number(nanoid()),
-    //     "body": formEntries.body,
-    //     "image": formEntries.image,
-    //     "post_date": `${year}-${month}-${day}`,
-    //     "user_id": id
-    // };
-    // // console.log("body", body)
-    // const headers = new Headers();
-    // headers.append("Content-Type", "application/json");
-    // headers.append("Authorization", `Bearer ${token}`)
+    const response = await fetch("http://localhost:8000/api/user/update", {
+        method: "PUT",
+        body: JSON.stringify(body),
+        headers: headers,
+    });
 
-    // const response = await fetch("http://localhost:8000/api/post/createPost", {
-    //     method: "POST",
-    //     body: JSON.stringify(body),
-    //     headers: headers,
-    // });
+    if (response.ok) {
+        console.log("avatar updated", await response.json());
+        return redirect("/");
+    }
 
-    // if (response.ok) {
-    //     console.log("new post created", await response.json());
-    //     return redirect("/");
-    // }
-
-    // console.log("error when creating new post", response)
-    // return json( {ok: false, message: "error al cargar imagen", url:""});
+    console.log("hubo algun error")
+    return json( {ok: false, message: "error al cargar imagen", url:""});
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs ) => {
@@ -122,7 +109,7 @@ export default function Avatar() {
         <div className="min-h-dvh center-full">
             <main className="min-h-dvh center-full py-[80px] w-90-auto max-w-[400px] md:border-[1px] md:border-gray-low md:px-[40px] md:max-w-[480px] md:rounded-2xl md:min-h-[700px]">
                 <h1 className="text-2xl text-center mb-10">¡Bienvenido <span className="font-bold text-sky-base">{name}</span>!</h1>
-                <p className="mb-3 w-full">Sube tu imagen de perfil</p>
+                <p className="mb-3 w-full text-sm">Sube tu imagen de perfil</p>
                 <Form method="post" encType="multipart/form-data"
                     className="mb-4 w-full"
                 >

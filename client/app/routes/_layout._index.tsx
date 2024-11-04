@@ -44,10 +44,10 @@ export const loader = async ({ request }: LoaderFunctionArgs ) => {
   }
 
   // Check that the user has a profile picture
-  if (avatar.length === 0 || avatar === "string") {
-    console.log('no tiene avatar then redirect')
-    return redirect('/avatar');
-  }
+  // if (avatar.length === 0 || avatar === "string") {
+  //   console.log('no tiene avatar then redirect')
+  //   return redirect('/avatar');
+  // }
 
   // Get posts for the feed
   let posts;
