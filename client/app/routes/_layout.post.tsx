@@ -84,7 +84,7 @@ const postAction = async (form: FormData, request: Request) => {
     headers.append("Content-Type", "application/json");
     headers.append("Authorization", `Bearer ${token}`)
 
-    const response = await fetch("http://localhost:8000/api/post/createPost", {
+    const response = await fetch("https://mini-red-social.onrender.com/api/post/createPost", {
         method: "POST",
         body: JSON.stringify(body),
         headers: headers,

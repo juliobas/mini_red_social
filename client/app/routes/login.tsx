@@ -15,7 +15,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 
 
-    const response = await fetch("http://localhost:8000/api/auth/login", {
+    const response = await fetch("https://mini-red-social.onrender.com/api/auth/login", {
         method: "POST",
         body: JSON.stringify(body),
         headers: headers,
@@ -25,7 +25,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const token = data.data;
 
         headers.append("Authorization", `Bearer ${token}`)
-        const userResponse = await fetch("http://localhost:8000/api/user/my_profile", {
+        const userResponse = await fetch("https://mini-red-social.onrender.com/api/user/my_profile", {
             method: "GET",
             headers: headers,
         });

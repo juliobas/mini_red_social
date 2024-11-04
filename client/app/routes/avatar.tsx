@@ -69,7 +69,7 @@ const confirmAction = async (form: FormData, request: Request) => {
     headers.append("Content-Type", "application/json");
     headers.append("Authorization", `Bearer ${token}`)
 
-    const response = await fetch("http://localhost:8000/api/user/update", {
+    const response = await fetch("https://mini-red-social.onrender.com/api/user/update", {
         method: "PUT",
         body: JSON.stringify(body),
         headers: headers,

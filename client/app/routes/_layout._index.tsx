@@ -21,7 +21,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   headers.append("Authorization", `Bearer ${token}`);
 
   try {
-    const response = await fetch('http://localhost:8000/api/post_likes/', {
+    const response = await fetch('https://mini-red-social.onrender.com/api/post_likes/', {
       method: "POST",
       headers: headers,
       body: JSON.stringify(body),
@@ -55,7 +55,7 @@ export const loader = async ({ request }: LoaderFunctionArgs ) => {
   try {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${token}`);
-    const response = await fetch("http://localhost:8000/api/post/", {
+    const response = await fetch("https://mini-red-social.onrender.com/api/post/", {
       method: "GET",
       headers: headers,
     });
@@ -86,7 +86,7 @@ export default function Index() {
     headers.append("Authorization", `Bearer ${token}`);
 
     console.log("Vamo a dar like")
-    fetch('http://localhost:8000/api/post_likes/', {
+    fetch('https://mini-red-social.onrender.com/api/post_likes/', {
       method: "POST",
       headers: headers,
       body: JSON.stringify(body),
