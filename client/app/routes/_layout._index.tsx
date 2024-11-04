@@ -40,7 +40,8 @@ export const loader = async ({ request }: LoaderFunctionArgs ) => {
   const { token, avatar } = await authCookie.parse(cookieHeader);
 
   if (!token) {
-    throw new Response("Unauthorized", { status: 401 });
+    return redirect('/login');
+    // throw new Response("Unauthorized", { status: 401 });
   }
 
   // Check that the user has a profile picture
