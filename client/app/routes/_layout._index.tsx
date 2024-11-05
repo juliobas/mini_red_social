@@ -37,18 +37,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const loader = async ({ request }: LoaderFunctionArgs ) => {
   const cookieHeader = request.headers.get("Cookie");
-  const { token, avatar } = await authCookie.parse(cookieHeader);
+  const cookies = await authCookie.parse(cookieHeader);
 
-  if (!token) {
+  try {
+    console.log(cookies.token)
+  } catch (e) {
     return redirect('/login');
-    // throw new Response("Unauthorized", { status: 401 });
   }
+  const { token } = cookies;
 
-  // Check that the user has a profile picture
-  // if (avatar.length === 0 || avatar === "string") {
-  //   console.log('no tiene avatar then redirect')
-  //   return redirect('/avatar');
-  // }
+ 
+  // // Check that the user has a profile picture
+  // // if (avatar.length === 0 || avatar === "string") {
+  // //   console.log('no tiene avatar then redirect')
+  // //   return redirect('/avatar');
+  // // }
 
   // Get posts for the feed
   let posts;
@@ -66,7 +69,7 @@ export const loader = async ({ request }: LoaderFunctionArgs ) => {
     console.log('error', e);
   }
 
-  // console.log(posts)
+  console.log("posts", posts)
   return {posts, token};
 };
 
@@ -93,10 +96,13 @@ export default function Index() {
     })
     .catch(e => console.log("error al dar like", e));
   };
+  // console.log("posts", posts)
 
   return (
     <main className="w-full space-y-4 divide-y divide-gray-lowest">
-      {posts.map(post =>
+      { 
+      posts ?
+      posts.map(post =>
         <Post
           key={post.id.toString()}
           postId={post.id}
@@ -111,7 +117,9 @@ export default function Index() {
           liked={post.liked}
           listComments=""
         />
-      )}
+      ) : 
+      <p>Aun no hay posts</p>
+    }
     </main>
   );
 }

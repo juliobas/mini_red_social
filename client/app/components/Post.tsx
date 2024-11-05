@@ -41,7 +41,7 @@ export default function Post(props: UserPost) {
         <div className="w-full space-y-2 pt-4">
             <div className="flex items-center w-90-auto space-x-3">
                 {
-                    (avatar !== "string" && avatar.length > 0) ?
+                    (avatar && avatar !== "string" && avatar.length > 0) ?
                     <img 
                         className="w-10 rounded-full"
                         src={avatar}
@@ -51,10 +51,11 @@ export default function Post(props: UserPost) {
                 
                 <span className="font-bold">{username}</span>
             </div>
+            {image &&
             <img 
                 className="w-full"
                 src={image} alt="post image"
-            />
+            />}
             <div className="w-90-auto flex space-x-3">
                 <span className="mr-auto text-sm text-gray-clear">{d}</span>
                 <div className="flex items-center text-2xl space-x-1">

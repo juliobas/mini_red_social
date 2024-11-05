@@ -20,7 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     headers.append("Content-Type", "application/json");
 
     try {
-
+        console.log("intenta registro")
         const response = await fetch("https://mini-red-social.onrender.com/api/auth/register", {
             method: "POST",
             body: JSON.stringify(body),
@@ -28,6 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         });
     
         if (!response.ok) {
+            console.log("algo malio sal", response)
             return ""
         }
 
@@ -36,40 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     } catch (e) {
         console.log("error", e)
     }
-
-    // if (response.ok) {
-    //     const data = await response.json();
-    //     const token = data.data;
-
-    //     headers.append("Authorization", `Bearer ${token}`)
-    //     const userResponse = await fetch("http://localhost:8000/api/user/my_profile", {
-    //         method: "GET",
-    //         headers: headers,
-    //     });
-
-    //     // console.log(userResponse.)
-    //     const dat = await userResponse.json();
-
-    //     const user = {
-    //         id: dat.data.id,
-    //         name: dat.data.name,
-    //         email: dat.data.email,
-    //         avatar: dat.data.avatar,
-    //         token: token,
-    //     };
-    //     console.log(user)
-
-    //     const authCookieHeader = await authCookie.serialize(user);
-
-    //     return redirect("/", {
-    //         headers: {
-    //           "Set-Cookie": authCookieHeader,
-    //         },
-    //       });
-    // }
-
-    // const data: ErrorResponse = await response.json();
-    // return data.message;
+    
     return ""
 };
 
