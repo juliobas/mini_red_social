@@ -50,7 +50,7 @@ const imageAction = async (form: FormData) => {
 const postAction = async (form: FormData, request: Request) => {
     const cookieHeader = request.headers.get("Cookie");
     const { token, id } = await authCookie.parse(cookieHeader);
-    console.log(token)
+    console.log("Vamo a crear un post")
 
     if (!token) {
         throw new Response("Unauthorized", { status: 401 });
@@ -61,7 +61,6 @@ const postAction = async (form: FormData, request: Request) => {
 
     // BODY - IMAGE
     const formEntries = Object.fromEntries(form);
-    console.log(formEntries)
 
     // POST_DATE
     const currentDate = new Date(Date.now());
@@ -84,7 +83,7 @@ const postAction = async (form: FormData, request: Request) => {
     headers.append("Content-Type", "application/json");
     headers.append("Authorization", `Bearer ${token}`)
 
-    const response = await fetch("http://localhost:8000/api/post/createPost", {
+    const response = await fetch("https://mini-red-social.onrender.com/api/post/createPost", {
         method: "POST",
         body: JSON.stringify(body),
         headers: headers,

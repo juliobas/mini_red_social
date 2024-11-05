@@ -14,7 +14,7 @@ export default function Navbar() {
     const location = useLocation();
     console.log(location)
     return (
-        <div className="fixed bottom-0 w-full border-t-[1px] bg-black111 border-gray-lowest py-3">
+        <div className="fixed bottom-0 mx-auto w-full max-w-[400px] border-t-[1px] bg-black111 border-gray-lowest py-3">
             <nav className="flex justify-around w-90-auto text-3xl ">
                 <NavLink
                     to="/"
