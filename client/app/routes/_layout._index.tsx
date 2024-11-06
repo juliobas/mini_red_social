@@ -1,67 +1,125 @@
-import { createCookie } from "@remix-run/node";
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
+import { data, redirect, useLoaderData } from "@remix-run/react";
 import Post from "~/components/Post";
+import { authCookie } from "~/utilities/utils";
+import type { endpointPosts } from "~/utilities/types";
 
-const authCookie = createCookie("auth-token", {
-  httpOnly: true,
-  secure: true,
-  sameSite: "lax",
-  maxAge: 60 * 60 * 24 * 7
-});
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const cookieHeader = request.headers.get("Cookie");
+  const { token } = await authCookie.parse(cookieHeader);
 
-const posts = [
-  {
+  const data = Object.fromEntries(await request.formData());
+  console.log(data)
+  const body = {
     "id": 0,
-    "body": "Hola 123 hola 123 hola 123 hola 123 hola 123 hola 123",
-    "image": "https://4kwallpapers.com/images/wallpapers/spider-man-into-the-spider-verse-miles-morales-spider-man-2048x2048-2948.jpg",
-    "post_date": "2024-10-25",
-    "user_id": 0
-  },
-  {
-    "id": 2,
-    "body": "bla bla bla bla bla bla",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFges80QlNtNK4oYRdqv4ONvBSjQI4aiwLpg&s",
-    "post_date": "2024-10-26",
-    "user_id": 1
-  },
-  {
-    "id": 3,
-    "body": "aaaa bbbbbb ccc dddd rrr ggg",
-    "image": "https://i.pinimg.com/736x/2b/f6/ea/2bf6eab40d79d043d24369e3e1e3c69d.jpg",
-    "post_date": "2024-10-26",
-    "user_id": 2
-  },
-];
+    "post_id": data.postId,
+    "user_id": data.userId,
+  };
+
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Authorization", `Bearer ${token}`);
+
+  try {
+    const response = await fetch('https://mini-red-social.onrender.com/api/post_likes/', {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+
+    console.log(response)
+  } catch (e) {
+    console.log("error al dar like", e);
+  }
+
+  return "";
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs ) => {
   const cookieHeader = request.headers.get("Cookie");
-  const token = await authCookie.parse(cookieHeader);
+  const cookies = await authCookie.parse(cookieHeader);
 
-  if (!token) {
-    throw new Response("Unauthorized", { status: 401 });
+  try {
+    console.log(cookies.token)
+  } catch (e) {
+    return redirect('/login');
+  }
+  const { token } = cookies;
+
+ 
+  // // Check that the user has a profile picture
+  // // if (avatar.length === 0 || avatar === "string") {
+  // //   console.log('no tiene avatar then redirect')
+  // //   return redirect('/avatar');
+  // // }
+
+  // Get posts for the feed
+  let posts;
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${token}`);
+    const response = await fetch("https://mini-red-social.onrender.com/api/post/", {
+      method: "GET",
+      headers: headers,
+    });
+    
+    const data = await response.json();
+    posts = data.data;
+  } catch (e ) {
+    console.log('error', e);
   }
 
-  return "posts";
+  console.log("posts", posts)
+  return {posts, token};
 };
 
 export default function Index() {
-  const data = useLoaderData<typeof loader>();
+  const {posts, token}: {posts: endpointPosts, token: string} = useLoaderData<typeof loader>();
+  posts.sort((a, b) => Date.parse(b.post_created_at) - Date.parse(a.post_created_at));
+
+  const giveLike = (postId: number, userId: number) => {
+    const body = {
+      "id": 0,
+      "post_id": postId,
+      "user_id": userId,
+    };
+
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Authorization", `Bearer ${token}`);
+
+    console.log("Vamo a dar like")
+    fetch('https://mini-red-social.onrender.com/api/post_likes/', {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    })
+    .catch(e => console.log("error al dar like", e));
+  };
+  // console.log("posts", posts)
+
   return (
     <main className="w-full space-y-4 divide-y divide-gray-lowest">
-      {posts.map(post =>
+      { 
+      posts ?
+      posts.map(post =>
         <Post
-          key={post.id.toString()} 
-          username={`nombre-de-usuario`}
-          userimage={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXx2xFk_wEb1hLQoDo4Ar3YbhosCPyOCfOgA&s`}
-          image={post.image}
-          body={post.body}
-          date={post.post_date}
-          likes={11}
-          comments={6}
+          key={post.id.toString()}
+          postId={post.id}
+          userId={post.post_user_id}
+          username={post.user_name}
+          avatar={post.user_avatar}
+          body={post.post_body} 
+          image={post.post_image_url}
+          date={post.post_created_at}
+          comments={post.no_comments}
+          likes={post.no_likes}
+          liked={post.liked}
+          listComments=""
         />
-      )}
-      
+      ) : 
+      <p>Aun no hay posts</p>
+    }
     </main>
   );
 }
